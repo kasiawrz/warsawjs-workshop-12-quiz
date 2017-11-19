@@ -72,5 +72,8 @@ export const quiz = [
       "`[1, 2].slice(0)`;"
     ],
     correctAnswerIndex: 3
+  },
+  {
+    title: "Gratulacje! Znałeś odpowiedzi na wszystkie pytania"
   }
 ]

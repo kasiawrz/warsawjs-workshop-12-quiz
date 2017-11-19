@@ -7,16 +7,26 @@
             <v-card>
               <v-card-title id="quiz"> {{ currentQuestion.title }}</v-card-title>
               <v-card-text>
-                {{ userAnswer }}
                 <v-list>
-                  <v-list-tile v-for= "(answer, answerIndex) in currentQuestion.answers"
+                  <v-list-tile v-for="(answer, answerIndex) in currentQuestion.answers"
                                :key="answerIndex"
-                               v-on:click="getAnswerStatus(answerIndex)"
+                               @click="getAnswer(answerIndex)"
+                               :class="getAnswerStatus(answerIndex)"
                   >
                     {{ answer }}
                   </v-list-tile>
                 </v-list>
               </v-card-text>
+              <v-card-actions>
+                <v-btn v-if="isUserCorrect"
+                       @click="getNextQuestion()"
+                >
+                  dalej</v-btn>
+                <v-btn v-else="isUserCorrect"
+                       @click="startAgain()"
+                >
+                  początek</v-btn>
+              </v-card-actions>
             </v-card>
           </v-flex>
         </v-layout>
@@ -29,29 +39,48 @@
   import { quiz } from './quiz'
 
   export default {
-    data () { 
+    data () {
     return {
       quiz: quiz,
       currentQuestionIndex: 0,
-      userAnswer: null,
-      name: '',
-      surname: ''
+      userAnswer: null
     }
   },
     computed: {
-      fullName () {
-        return this.name + ' ' + this.surname
-      },
       currentQuestion () {
         return quiz[this.currentQuestionIndex]
+      },
+      isUserCorrect () {
+        return this.currentQuestion.correctAnswerIndex === this.userAnswer
       }
     },
     methods: {
-      getAnswerStatus (answerIndex) {
+      getAnswer(answerIndex) {
         if (this.userAnswer === null) {
           this.userAnswer = answerIndex;
-          console.log(this.userAnswer);
         }
+      },
+      getAnswerStatus(answerIndex) {
+        let index = this.currentQuestion.correctAnswerIndex;
+        if (index === answerIndex && answerIndex === this.userAnswer) {
+          return "success"
+        }
+        else if (index !== answerIndex && answerIndex === this.userAnswer) {
+          return "error"
+        }
+        else {
+          return "secondary"
+        }
+      },
+      getNextQuestion() {
+        if (this.currentQuestionIndex < quiz.length-1) {
+          this.currentQuestionIndex++
+          this.userAnswer= null
+        }
+      },
+      startAgain() {
+        this.currentQuestionIndex = 0
+        this.userAnswer= null
       }
     }
 }
