@@ -2,8 +2,9 @@
   <v-app dark>
     <v-content>
       <v-container>
-        <v-layout>
-          <v-flex>
+        <v-layout row justify-center>
+          <v-flex md6>
+            <img src="https://logos-download.com/wp-content/uploads/2016/09/Who_Wants_To_Be_A_Millionaire_logo_logotype-700x657.png" height="200px">
             <div class="success" v-if="userWon">
               GRATULACJE! Wygrałeś $ 1 000 000
             </div>
@@ -32,6 +33,11 @@
               </v-card-actions>
             </v-card>
           </v-flex>
+          <v-flex md3>
+            <add-question @new-question="addQuestion($event)" >
+            </add-question>
+            <p>{{ newQuestion }}</p>
+          </v-flex>
         </v-layout>
       </v-container>
     </v-content>
@@ -40,14 +46,18 @@
 
 <script>
   import { quiz } from './quiz'
+  import AddQuestion from './components/AddQuestion.vue'
 
   export default {
+    components: {
+      'add-question': AddQuestion},
     data () {
     return {
       quiz: quiz,
       currentQuestionIndex: 0,
       userAnswer: null,
-      userWon: false
+      userWon: false,
+      newQuestion: null
     }
   },
     computed: {
@@ -87,7 +97,12 @@
       },
       startAgain() {
         this.currentQuestionIndex = 0
-        this.userAnswer= null
+        this.userAnswer = null
+      },
+      addQuestion(newQuestion) {
+        if (newQuestion.title !== this.quiz[quiz.length-1].title) {
+          this.quiz.push(newQuestion);
+        }
       }
     }
 }
