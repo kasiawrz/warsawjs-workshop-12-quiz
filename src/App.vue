@@ -4,6 +4,9 @@
       <v-container>
         <v-layout>
           <v-flex>
+            <div class="success" v-if="userWon">
+              GRATULACJE! Wygrałeś $ 1 000 000
+            </div>
             <v-card>
               <v-card-title id="quiz"> {{ currentQuestion.title }}</v-card-title>
               <v-card-text>
@@ -43,7 +46,8 @@
     return {
       quiz: quiz,
       currentQuestionIndex: 0,
-      userAnswer: null
+      userAnswer: null,
+      userWon: false
     }
   },
     computed: {
@@ -57,12 +61,15 @@
     methods: {
       getAnswer(answerIndex) {
         if (this.userAnswer === null) {
-          this.userAnswer = answerIndex;
+          this.userAnswer = answerIndex
         }
       },
       getAnswerStatus(answerIndex) {
         let index = this.currentQuestion.correctAnswerIndex;
         if (index === answerIndex && answerIndex === this.userAnswer) {
+          if (index === this.quiz.length-1) {
+            this.userWon = true
+          }
           return "success"
         }
         else if (index !== answerIndex && answerIndex === this.userAnswer) {
